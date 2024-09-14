@@ -1,13 +1,16 @@
 import { DataSource } from "typeorm";
-import { User } from "../../types/models/userEntity";
+import { User } from "../../types/models/userEntity"
+import { Config } from "../../config.ts";
+
+const config = Config.getInstance()
 
 const appDataSource = new DataSource({
     type: "postgres",
-    host: "localhost",
-    port: 5432,
-    username: "notion_connection_api",
-    password: "kiMyUzpP",
-    database: "postgres",
+    host: config.dbHost,
+    port: config.dbPort,
+    username: config.dbUsername,
+    password: config.dbPassword,
+    database: config.database,
     entities: [User],
     synchronize: true,
     logging: true,

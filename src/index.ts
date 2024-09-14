@@ -6,6 +6,7 @@ import CustomRequest from './types/customRequest';
 import userRouter from './modules/userModule';
 import authRouter from './modules/authModule';
 import { initializeDB } from './repository/database';
+import { Config } from './config.ts';
 
 var server:Server;
 
@@ -21,7 +22,7 @@ const shutDownServer = async () => {
     });
 }
 
-const port = 3000;
+const config = Config.getInstance()
 const app = express();
 
 app.use(express.json());
@@ -35,8 +36,8 @@ app.get("/health", (req:CustomRequest, res:Response)=>{
     return res.status(200).send({"data":"Heath Check - OK!"});
 });
 
-server = app.listen(port, async ()=>{
-    console.log(`Server is running on port ${port}`);
+server = app.listen(config.appPort, async ()=>{
+    console.log(`Server is running on port ${config.appPort}`);
     await initializeServer();
 });
 
