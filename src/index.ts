@@ -5,10 +5,12 @@ import authMiddleware from './middlewares/authMiddleware';
 import CustomRequest from './types/customRequest';
 import userRouter from './modules/userModule';
 import authRouter from './modules/authModule';
+import { initializeDB } from './repository/database';
 
 var server:Server;
 
 const initializeServer = async ()=>{
+    initializeDB();
     console.log("Ready to use! ✅\n");
 }
 
