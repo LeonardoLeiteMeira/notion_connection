@@ -4,7 +4,6 @@ services:
   postgres:
     image: postgres:latest
     environment:
-      POSTGRES_DB: notion_connection
       POSTGRES_USER: notion_connection_api
       POSTGRES_PASSWORD: kiMyUzpP
     ports:
