@@ -7,6 +7,9 @@ import userRouter from './modules/userModule';
 import authRouter from './modules/authModule';
 import { initializeDB } from './repository/database';
 import { Config } from './config.ts';
+import "reflect-metadata";
+import DependencyManager from './config.ts/dependencyInjection';
+
 
 var server:Server;
 
@@ -22,7 +25,7 @@ const shutDownServer = async () => {
     });
 }
 
-const config = Config.getInstance()
+const config = DependencyManager.container.get<Config>(DependencyManager.types.Config);
 const app = express();
 
 app.use(express.json());

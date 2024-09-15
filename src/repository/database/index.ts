@@ -1,8 +1,10 @@
 import { DataSource } from "typeorm";
 import { User } from "../../types/models/userEntity"
 import { Config } from "../../config.ts";
+import DependencyManager from "../../config.ts/dependencyInjection";
 
-const config = Config.getInstance()
+
+const config = DependencyManager.container.get<Config>(DependencyManager.types.Config);
 
 const appDataSource = new DataSource({
     type: "postgres",

@@ -1,23 +1,23 @@
 import * as dotenv from 'dotenv';
+import { injectable } from 'inversify';
 dotenv.config();
 
+@injectable()
 export class Config{
-    private static instance:Config|undefined;
+    public dbHost:string;
+    public dbPort:number;
+    public dbUsername:string|undefined;
+    public dbPassword:string|undefined;
+    public database:string|undefined;
 
-    public dbHost:string = process.env.DB_HOST || "localhost";
-    public dbPort:number = parseInt(process.env.DB_PORT || "5432");
-    public dbUsername:string|undefined = process.env.DB_USER;
-    public dbPassword:string|undefined = process.env.DB_PASSWORD;
-    public database:string|undefined = process.env.DB;
+    public appPort:number;
 
-    public appPort:number = parseInt(process.env.PORT || "3000");
-
-    private constructor (){}
-
-    static getInstance():Config{
-        if(this.instance===undefined){
-            this.instance = new Config();
-        }
-        return this.instance;
+    constructor (){
+        this.dbHost = process.env.DB_HOST || "localhost";
+        this.dbPort = parseInt(process.env.DB_PORT || "5432");
+        this.dbUsername = process.env.DB_USER;
+        this.dbPassword = process.env.DB_PASSWORD;
+        this.database = process.env.DB;
+        this.appPort = parseInt(process.env.PORT || "3000");
     }
 }
