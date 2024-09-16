@@ -6,7 +6,7 @@ import { Config } from './config.ts';
 import { DependencyContainer } from "./config.ts/dependencyInjection/inversify.config";
 import { InversifyExpressServer } from "inversify-express-utils";
 
-
+console.log("\nentrou na main")
 const config = new Config();
 const initializeServer = async ()=>{
     console.log("\nReady to use! ✅\n");

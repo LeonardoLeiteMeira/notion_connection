@@ -6,26 +6,22 @@ import { TYPES } from "../../config.ts/dependencyInjection/types";
 
 @injectable()
 export class UserRepository{
-    private promiseDatabase:Promise<Repository<User>>;
-    private async database():Promise<Repository<User>>{
-        return await this.promiseDatabase;
-    }
+    private database:Repository<User>;
 
     constructor(@inject(TYPES.AppDataSource) appDataSource:AppDataSource){
-        console.log("\nBuscando o repository");
-        this.promiseDatabase = appDataSource.loadRepository(User);
+        this.database = appDataSource.getRepository(User);
     }
 
     public async saveUser(user:User):Promise<void>{
-        (await this.database()).save(user);
+        await this.database.save(user);
     }
 
     public async getAll():Promise<Array<User>>{
-        return (await this.database()).find();
+        return await this.database.find();
     }
 
     public async getUserById(userId:number):Promise<User|null>{
-        return (await this.database()).findOneBy({
+        return await this.database.findOneBy({
             id:userId
         });
     }

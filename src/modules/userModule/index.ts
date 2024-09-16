@@ -9,14 +9,11 @@ import { controller, httpGet, httpPost, httpDelete, request, queryParam, respons
 
 @controller('/user')
 export class UserController{
-    constructor(@inject(TYPES.UserRepository) private userRepository:UserRepository){
-        console.log("\nCarregando o User controller")
-    }
+    constructor(@inject(TYPES.UserRepository) private userRepository:UserRepository){}
 
     @httpPost('/')
     public async create(@request() request:CustomRequest, @response() response:Response){
         const userData = request.body as User;
-        console.log("Received user: ", userData);
         await this.userRepository.saveUser(userData);
         return response.status(201).send();
     }

@@ -11,7 +11,6 @@ const DependencyContainer = new Container({ skipBaseClassChecks: true });
 
 DependencyContainer.bind<Config>(TYPES.Config).to(Config).inSingletonScope();
 DependencyContainer.bind<UserRepository>(TYPES.UserRepository).to(UserRepository);
-
-DependencyContainer.bind<AppDataSource>(TYPES.AppDataSource).to(AppDataSource).inSingletonScope();
+DependencyContainer.bind<AppDataSource>(TYPES.AppDataSource).toDynamicValue((context)=>AppDataSource.getInstance());
 
 export { DependencyContainer }
