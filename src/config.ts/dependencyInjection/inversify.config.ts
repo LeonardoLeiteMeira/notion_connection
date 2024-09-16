@@ -5,6 +5,7 @@ import { UserRepository } from "../../repository/userRepository";
 import { AppDataSource } from "../../repository/database";
 import '../../modules/authModule/index';
 import '../../modules/userModule/index';
+import '../../modules/healthModule/index';
 
 const DependencyContainer = new Container({ skipBaseClassChecks: true });
 
