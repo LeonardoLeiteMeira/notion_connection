@@ -1,33 +1,41 @@
-import { Router, Response } from 'express';
+import { Response } from 'express';
 import CustomRequest from '../../types/customRequest';
 import { UserRepository } from '../../repository/userRepository';
 import { User } from '../../types/models/userEntity';
-
-const userRepository = new UserRepository();
-
-const userRouter = Router();
-
-userRouter.post('/',async (req:CustomRequest, res:Response)=>{
-    const userData = req.body as User;
-    console.log("Received user: ", userData);
-    await userRepository.saveUser(userData);
-    return res.status(201).send();
-});
-
-userRouter.get('/',async (req:CustomRequest, res:Response)=>{
-    const users = await userRepository.getAll();
-    return res.status(200).send(users);
-})
-
-userRouter.get('/:id', async (req:CustomRequest, res:Response)=>{
-    const {id} = req.params;
-    const user = await userRepository.getUserById(parseInt(id));
-    return res.status(200).send(user);
-});
-
-userRouter.get('/root',(req:CustomRequest, resp:Response)=>{
-    return resp.status(200).send({"Data":"This is root of User Module"});
-});
+import { TYPES } from '../../config.ts/dependencyInjection/types';
+import { inject } from 'inversify';
+import { controller, httpGet, httpPost, httpDelete, request, queryParam, response, requestParam } from "inversify-express-utils";
 
 
-export default userRouter;
+@controller('/user')
+export class UserController{
+    constructor(@inject(TYPES.UserRepository) private userRepository:UserRepository){
+        console.log("\nCarregando o User controller")
+    }
+
+    @httpPost('/')
+    public async create(@request() request:CustomRequest, @response() response:Response){
+        const userData = request.body as User;
+        console.log("Received user: ", userData);
+        await this.userRepository.saveUser(userData);
+        return response.status(201).send();
+    }
+
+    @httpGet('/')
+    public async getAll(@request() request:CustomRequest, @response() response:Response){
+        const users = await this.userRepository.getAll();
+        return response.status(200).send(users);
+    }
+
+    @httpGet('/:id')
+    public async getById(@request() request:CustomRequest, @response() response:Response){
+        const {id} = request.params;
+        const user = await this.userRepository.getUserById(parseInt(id));
+        return response.status(200).send(user);
+    }
+
+    @httpGet('/root')
+    public async root(@request() request:CustomRequest, @response() response:Response){
+        return response.status(200).send({"Data":"This is root of User Module"});
+    }
+}

@@ -1,9 +1,16 @@
 import { Container } from "inversify";
 import { Config } from "..";
 import { TYPES } from "./types";
+import { UserRepository } from "../../repository/userRepository";
+import { AppDataSource } from "../../repository/database";
+import '../../modules/authModule/index';
+import '../../modules/userModule/index';
 
-const dependencyContainer = new Container();
+const DependencyContainer = new Container({ skipBaseClassChecks: true });
 
-dependencyContainer.bind<Config>(TYPES.Config).to(Config).inSingletonScope()
+DependencyContainer.bind<Config>(TYPES.Config).to(Config).inSingletonScope();
+DependencyContainer.bind<UserRepository>(TYPES.UserRepository).to(UserRepository);
 
-export { dependencyContainer }
+DependencyContainer.bind<AppDataSource>(TYPES.AppDataSource).to(AppDataSource).inSingletonScope();
+
+export { DependencyContainer }

@@ -1,12 +1,13 @@
-import { Router, Response } from 'express';
-import CustomRequest from '../../types/customRequest';
+import { Response } from "express";
+import CustomRequest from "../../types/customRequest";
+import { controller, httpGet, request, response } from "inversify-express-utils";
 
+@controller('/auth')
+export class AuthController{
+    public constructor(){}
 
-const authRouter = Router();
-
-authRouter.get('/',(req:CustomRequest, resp:Response)=>{
-    return resp.status(200).send({"Data":"This is root of Auth Module"});
-});
-
-
-export default authRouter;
+    @httpGet('/')
+    public index(@request() request:CustomRequest, @response() response:Response){
+        return response.status(200).send({"Data":"This is root of Auth Module - Modified"});
+    }
+}

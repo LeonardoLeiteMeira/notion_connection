@@ -1,47 +1,40 @@
-import express, { Response, Application } from 'express';
-import { Server } from 'http';
+import "reflect-metadata";
+import express, { Response } from 'express';
 import logMiddleware from './middlewares/logMiddleware';
 import authMiddleware from './middlewares/authMiddleware';
 import CustomRequest from './types/customRequest';
-import userRouter from './modules/userModule';
-import authRouter from './modules/authModule';
-import { initializeDB } from './repository/database';
 import { Config } from './config.ts';
-import "reflect-metadata";
-import DependencyManager from './config.ts/dependencyInjection';
+import { DependencyContainer } from "./config.ts/dependencyInjection/inversify.config";
+import { InversifyExpressServer } from "inversify-express-utils";
 
-
-var server:Server;
-
+const config = new Config();
 const initializeServer = async ()=>{
-    initializeDB();
-    console.log("Ready to use! ✅\n");
+    console.log("\nReady to use! ✅\n");
 }
 
 const shutDownServer = async () => {
     console.log("\nShutting server down...");
-    server.close(()=>{
-        console.log("Finished!👋\n");
-    });
+    console.log("\nFinished!👋\n");
+    process.exit(0);
 }
 
-const config = DependencyManager.container.get<Config>(DependencyManager.types.Config);
-const app = express();
+let server = new InversifyExpressServer(DependencyContainer);
 
+server.setConfig(async (app) => {
+    await initializeServer();
+});
+
+let app = server.build();
 app.use(express.json());
 app.use(authMiddleware);
 app.use(logMiddleware);
-
-app.use('/auth',authRouter);
-app.use('/user',userRouter);
 
 app.get("/health", (req:CustomRequest, res:Response)=>{
     return res.status(200).send({"data":"Heath Check - OK!"});
 });
 
-server = app.listen(config.appPort, async ()=>{
-    console.log(`Server is running on port ${config.appPort}`);
-    await initializeServer();
+app.listen(config.appPort, async ()=>{
+    console.log(`\nServer is running on port ${config.appPort}`);
 });
 
 process.on('SIGINT',shutDownServer);

@@ -2,7 +2,7 @@ import { NextFunction, Response } from "express";
 import CustomRequest from "../../types/customRequest";
 
 const authMiddleware = (req: CustomRequest, res: Response, next: NextFunction) => {
-  console.log('Middleware de autenticação');
+  console.log('\nMiddleware de autenticação\n');
   
   const isAuthenticated = true;
 
